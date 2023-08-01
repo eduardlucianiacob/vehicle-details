@@ -2,6 +2,7 @@ package com.learn2code.api.vehicle.details.controller;
 
 import com.learn2code.api.vehicle.details.entities.VehicleDetail;
 import com.learn2code.api.vehicle.details.errors.MandatoryFieldsMissingException;
+import com.learn2code.api.vehicle.details.errors.VehicleDetailsNotFound;
 import com.learn2code.api.vehicle.details.service.VehicleDetailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,11 @@ public class VehicleDetailController {
         }
         VehicleDetail dbVehicle = vehicleDetailService.saveVehicleDetails(vehicleDetail);
         return new ResponseEntity<>(dbVehicle, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public List<VehicleDetail> getAllVehicleDetails() throws VehicleDetailsNotFound {
+        return vehicleDetailService.fetchAllVehicleDetails();
+
     }
 }
