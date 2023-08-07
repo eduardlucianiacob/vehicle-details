@@ -1,7 +1,9 @@
 package com.learn2code.api.vehicle.details.controller;
 
+import com.learn2code.api.vehicle.details.dto.VehicleDetailsDTO;
 import com.learn2code.api.vehicle.details.entities.VehicleDetail;
 import com.learn2code.api.vehicle.details.errors.MandatoryFieldsMissingException;
+import com.learn2code.api.vehicle.details.errors.VehicleDetailsNotFound;
 import com.learn2code.api.vehicle.details.service.VehicleDetailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,6 @@ public class VehicleDetailController {
     @Autowired
     private VehicleDetailService vehicleDetailService;
 
-    @GetMapping
-    public String hello(){
-        return "Hello";
-    }
-
     @PostMapping
     public ResponseEntity<VehicleDetail> saveVehicleDetails(@Valid @RequestBody VehicleDetail vehicleDetail, BindingResult result) throws Exception {
         if(result.hasErrors()){
@@ -40,4 +37,16 @@ public class VehicleDetailController {
         VehicleDetail dbVehicle = vehicleDetailService.saveVehicleDetails(vehicleDetail);
         return new ResponseEntity<>(dbVehicle, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public VehicleDetailsDTO getAllVehicleDetails() throws VehicleDetailsNotFound{
+        List<VehicleDetail> savedVehicles = vehicleDetailService.fetchAllVehicleDetails();
+        return new VehicleDetailsDTO(savedVehicles);
+    }
+
+    @GetMapping("/{vehicleId}")
+    public VehicleDetail getVehicleDetailById(@PathVariable int vehicleId) throws VehicleDetailsNotFound {
+        return vehicleDetailService.getVehicleById(vehicleId);
+    }
+
 }
