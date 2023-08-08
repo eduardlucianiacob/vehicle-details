@@ -48,4 +48,15 @@ public class VehicleDetailServiceImpl implements VehicleDetailService {
         }
         return optionalVehicleDetail.get();
     }
+
+    @Override
+    public void deleteVehicleDetailsById(int vehicleId) throws VehicleDetailsNotFound {
+        Optional<VehicleDetail> optionalVehicleDetail = vehicleDetailsDAO.findById(vehicleId);
+
+        if(!optionalVehicleDetail.isPresent()){
+            throw new VehicleDetailsNotFound("No vehicle details found in database for vehicle ID-"+ vehicleId);
+        }
+
+        vehicleDetailsDAO.deleteById(vehicleId);
+    }
 }
