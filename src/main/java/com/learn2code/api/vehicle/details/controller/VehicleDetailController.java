@@ -2,6 +2,7 @@ package com.learn2code.api.vehicle.details.controller;
 
 import com.learn2code.api.vehicle.details.entities.VehicleDetail;
 import com.learn2code.api.vehicle.details.errors.MandatoryFieldsMissingException;
+import com.learn2code.api.vehicle.details.errors.VehicleDetailsNotFound;
 import com.learn2code.api.vehicle.details.service.VehicleDetailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,6 @@ public class VehicleDetailController {
     @Autowired
     private VehicleDetailService vehicleDetailService;
 
-    @GetMapping
-    public String hello(){
-        return "Hello";
-    }
-
     @PostMapping
     public ResponseEntity<VehicleDetail> saveVehicleDetails(@Valid @RequestBody VehicleDetail vehicleDetail, BindingResult result) throws Exception {
         if(result.hasErrors()){
@@ -40,4 +36,17 @@ public class VehicleDetailController {
         VehicleDetail dbVehicle = vehicleDetailService.saveVehicleDetails(vehicleDetail);
         return new ResponseEntity<>(dbVehicle, HttpStatus.CREATED);
     }
+    @DeleteMapping("/{vehicleId}")
+    public ResponseEntity<String> deleteVehicleDetailsById(@PathVariable int vehicleId) throws VehicleDetailsNotFound
+    {
+        vehicleDetailService.deleteVehicleDetailsById(vehicleId);
+        return new ResponseEntity<>("Deleted vehicle details from DB with ID-"+ vehicleId, HttpStatus.OK);
+    }
+
+    @PutMapping("/{vehicleId}")
+    public ResponseEntity<VehicleDetail> updateVehicleById(@PathVariable int vehicleId, @RequestBody VehicleDetail vehicleDetail) throws VehicleDetailsNotFound {
+        VehicleDetail savedVehicle = vehicleDetailService.updateVehicleDetails(vehicleId, vehicleDetail);
+        return ResponseEntity.status(HttpStatus.OK).body(savedVehicle);
+    }
+
 }
