@@ -39,7 +39,13 @@ public class VehicleDetailController {
 
     @GetMapping("/search")
     public VehicleDetailsDTO getVehiclesByCriteria(@RequestParam String modelYear, @RequestParam String brand, @RequestParam String model, @RequestParam String trim, @RequestParam String price){
+
+        if(price == "" || price==null){
+            price="0.0";
+        }
         List<VehicleDetail> filteredVehicles=vehicleDetailService.fetchFilteredVehiclesDetails(modelYear, brand, model, trim, Double.parseDouble(price));
         return new VehicleDetailsDTO(filteredVehicles);
     }
+
+
 }
